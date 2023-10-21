@@ -1,16 +1,12 @@
-FROM node:latest
+FROM node:lts AS development
 
-WORKDIR /app
+ENV CI=true
+ENV PORT=3000
 
-# Install dependencies
-COPY package.json /app
-COPY package-lock.json /app
+WORKDIR /code
+COPY package.json /code/package.json
+COPY package-lock.json /code/package-lock.json
+RUN npm ci
+COPY . /code
 
-RUN npm install
-
-# Add rest of the client code
-COPY . /app
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD [ "npm", "start" ]
